@@ -51,7 +51,8 @@ jobs:
       - name: Sign in with the nameocean.net DNS key
         env:
           MCP_PRIVATE_KEY: ${{ secrets.MCP_PRIVATE_KEY }}
-        run: ./mcp-publisher login dns --domain nameocean.net
+        # v1.8.9 does not read MCP_PRIVATE_KEY by itself; Actions masks the secret in the log
+        run: ./mcp-publisher login dns --domain nameocean.net --private-key "$MCP_PRIVATE_KEY"
 
       - name: Publish
         run: ./mcp-publisher publish
