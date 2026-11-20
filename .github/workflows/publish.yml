@@ -1,0 +1,57 @@
+# Publishes server.json to the official MCP Registry as net.nameocean/mcp.
+# Ownership of nameocean.net is proven with the Ed25519 key whose public half is the
+# "v=MCPv1; k=ed25519; p=..." TXT record on the nameocean.net apex. The private key (hex)
+# is the MCP_PRIVATE_KEY repository secret.
+#
+# Release: bump "version" in server.json, commit, then tag it: git tag v1.0.1 && git push --tags
+name: Publish to MCP Registry
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  MCP_PUBLISHER_VERSION: v1.8.9
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check the tag matches server.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          want="${GITHUB_REF#refs/tags/v}"
+          have="$(jq -r .version server.json)"
+          [ "$want" = "$have" ] || { echo "tag v$want but server.json has $have"; exit 1; }
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Download and verify mcp-publisher
+        run: |
+          set -euo pipefail
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+          curl --fail --location --silent --show-error --output "$archive" "$base_url/$archive"
+          curl --fail --location --silent --show-error --output "$archive.sigstore.json" "$base_url/$archive.sigstore.json"
+          cosign verify-blob \
+            --bundle "$archive.sigstore.json" \
+            --certificate-identity "https://github.com/modelcontextprotocol/registry/.github/workflows/release.yml@refs/tags/${MCP_PUBLISHER_VERSION}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "$archive"
+          tar xzf "$archive" mcp-publisher
+          rm -f "$archive" "$archive.sigstore.json"
+
+      - name: Sign in with the nameocean.net DNS key
+        env:
+          MCP_PRIVATE_KEY: ${{ secrets.MCP_PRIVATE_KEY }}
+        run: ./mcp-publisher login dns --domain nameocean.net
+
+      - name: Publish
+        run: ./mcp-publisher publish

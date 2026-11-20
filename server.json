@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "net.nameocean/mcp",
+  "title": "NameOcean",
+  "description": "Manage domains, DNS, SSL, app servers, email, uptime monitors and webhooks on NameOcean.",
+  "version": "1.0.0",
+  "websiteUrl": "https://nameocean.net/developers/mcp/",
+  "repository": {
+    "url": "https://github.com/NameOcean/mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://nameocean.net/static/img/favicon.png",
+      "mimeType": "image/png",
+      "sizes": ["48x48"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://nameocean.net/mcp"
+    }
+  ]
+}
