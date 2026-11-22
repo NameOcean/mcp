@@ -1,5 +1,7 @@
 # NameOcean MCP server
 
+[![mcptry](https://mcptry.com/badge/net.nameocean/mcp)](https://mcptry.com/servers/net.nameocean/mcp)
+
 NameOcean runs a remote [MCP](https://modelcontextprotocol.io) server at
 
 ```
