@@ -8,7 +8,7 @@ NameOcean runs a remote [MCP](https://modelcontextprotocol.io) server at
 https://nameocean.net/mcp
 ```
 
-Connect Claude Code, Claude, Cursor, VS Code or any other MCP client once. You can then ask it to manage your NameOcean domains, DNS, SSL certificates, app servers, email, uptime monitors and webhooks. It has 90 tools. You sign in in the browser, so there is no key to paste and nothing to install.
+Connect Claude Code, Claude, Cursor, VS Code or any other MCP client once. You can then ask it to manage your NameOcean domains, DNS, SSL certificates, app servers, email, uptime monitors and webhooks. It has 96 tools. You sign in in the browser, so there is no key to paste and nothing to install.
 
 This repository holds the documentation and the [MCP Registry](https://registry.modelcontextprotocol.io) entry (`net.nameocean/mcp`). The server itself runs on nameocean.net.
 
